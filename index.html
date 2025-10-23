@@ -3,17 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nemesis | DeFi Trading Protocol</title>
+<title>Nemesis | DeFi Protocol</title>
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     font-family: 'Poppins', sans-serif;
@@ -41,12 +37,19 @@
 
   header h1 {
     font-family: 'Orbitron', sans-serif;
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     letter-spacing: 2px;
     text-transform: uppercase;
     background: linear-gradient(90deg, #00ffff, #8c52ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: shimmer 4s infinite linear;
+  }
+
+  @keyframes shimmer {
+    0% { filter: brightness(1); }
+    50% { filter: brightness(1.6); }
+    100% { filter: brightness(1); }
   }
 
   /* Q&A Section */
@@ -74,9 +77,7 @@
     transition: all 0.6s ease;
   }
 
-  .qa-answer.active {
-    opacity: 1;
-  }
+  .qa-answer.active { opacity: 1; }
 
   .center-text {
     position: absolute;
@@ -119,7 +120,7 @@
     transform: scale(1.05);
   }
 
-  /* Team Section */
+  /* Official Handles Section */
   .team-section {
     text-align: center;
     padding: 120px 0 80px;
@@ -147,7 +148,7 @@
     background: rgba(255,255,255,0.08);
     border-radius: 20px;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px rgba(0,255,255,0.15);
+    box-shadow: 0 0 25px rgba(0,255,255,0.15);
     text-align: center;
     opacity: 0;
     transform: translateY(40px);
@@ -160,11 +161,13 @@
   }
 
   .team-card img {
-    width: 90px;
-    height: 90px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
     border: 2px solid #00ffff;
+    box-shadow: 0 0 15px rgba(0,255,255,0.5);
     margin-bottom: 15px;
+    object-fit: cover;
   }
 
   .team-card h3 { font-size: 1.2rem; margin-bottom: 5px; }
@@ -224,17 +227,22 @@
 </section>
 
 <section class="team-section">
-  <h2>Meet Our Team</h2>
+  <h2>Official Handles</h2>
   <div class="team-container">
     <div class="team-card">
-      <img src="https://pbs.twimg.com/profile_images/1889997353745033216/YFv5Ku7M_400x400.jpg" alt="Nemesis Official">
+      <a href="https://x.com/Nemesisdottrade" target="_blank">
+        <img src="https://pbs.twimg.com/profile_images/1889997353745033216/YFv5Ku7M_400x400.jpg" alt="Nemesis Official">
+      </a>
       <h3>Nemesis Protocol</h3>
       <p class="role">Official Account</p>
       <p class="handle">@Nemesisdottrade</p>
     </div>
+
     <div class="team-card">
-      <img src="https://pbs.twimg.com/profile_images/1890001272315158528/HG6x0Z9N_400x400.jpg" alt="Builder">
-      <h3>Peter</h3>
+      <a href="https://x.com/Peter_Nemesis" target="_blank">
+        <img src="https://pbs.twimg.com/profile_images/1890001272315158528/HG6x0Z9N_400x400.jpg" alt="Peter Nemesis">
+      </a>
+      <h3>Peter (Nemesis arc)</h3>
       <p class="role">Builder / Core Contributor</p>
       <p class="handle">@Peter_Nemesis</p>
     </div>
@@ -243,7 +251,7 @@
 
 <footer>
   <a href="https://nemesis.trade" target="_blank">Website</a> |
-  <a href="https://twitter.com/Nemesisdottrade" target="_blank">X (Twitter)</a> |
+  <a href="https://x.com/Nemesisdottrade" target="_blank">X (Twitter)</a> |
   <a href="https://substack.com/inbox/post/172884109?r=6ful6d&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true&triedRedirect=true" target="_blank">Substack</a>
 </footer>
 
@@ -264,7 +272,7 @@
     });
   });
 
-  // Team fade-in animation on scroll
+  // Fade-in effect for handles
   const teamCards = document.querySelectorAll('.team-card');
   function revealTeam() {
     const trigger = window.innerHeight * 0.85;
