@@ -1,92 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nemesis | DeFi Trading Protocol</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Poppins", sans-serif; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
   body {
+    font-family: 'Poppins', sans-serif;
     background: url("https://raw.githubusercontent.com/0x-zerai/Nemesis-ARENA/main/Nemesis_BG.jpg") no-repeat center center fixed;
     background-size: cover;
-    color: #e0e0e0;
+    color: #fff;
     overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* Overlay for readability */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: -1;
   }
 
   header {
     text-align: center;
-    padding: 60px 20px 20px;
-  }
-  header h1 {
-    font-size: 3rem;
-    background: linear-gradient(90deg, #8c52ff, #00ffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 700;
-  }
-  header p {
-    margin-top: 10px;
-    color: #bbb;
-    font-size: 1.1rem;
+    padding: 70px 20px 10px;
   }
 
-  /* Question Section */
+  header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #00ffff, #8c52ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Q&A Section */
   .qa-section {
-    position: relative;
-    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    min-height: 80vh;
   }
 
   .qa-answer {
     position: absolute;
     max-width: 60%;
     text-align: center;
-    font-size: 1.2rem;
-    color: #e0e0e0;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 20px 30px;
-    border-radius: 16px;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #fff;
+    padding: 25px 35px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 20px rgba(140, 82, 255, 0.2);
+    backdrop-filter: blur(10px);
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: all 0.6s ease;
   }
 
   .qa-answer.active {
     opacity: 1;
   }
 
-  .qa-buttons {
+  .center-text {
     position: absolute;
-    right: 5%;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.8rem;
+    color: #00ffff;
+    text-shadow: 0 0 10px rgba(0,255,255,0.8);
+    top: 45%;
+    transition: opacity 0.4s ease;
+  }
+
+  .qa-buttons-left,
+  .qa-buttons-right {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
+  .qa-buttons-left { left: 8%; }
+  .qa-buttons-right { right: 8%; }
+
   .qa-button {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.2);
-    padding: 14px 20px;
     border-radius: 30px;
-    color: #e0e0e0;
-    cursor: pointer;
+    padding: 14px 22px;
     font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
     transition: all 0.3s ease;
+    text-align: center;
   }
+
   .qa-button:hover {
-    background: linear-gradient(90deg, #8c52ff, #00ffff);
+    background: linear-gradient(90deg, #00ffff, #8c52ff);
     color: #111;
+    transform: scale(1.05);
   }
 
   /* Team Section */
   .team-section {
-    padding: 100px 0;
     text-align: center;
+    padding: 120px 0 80px;
   }
 
   .team-section h2 {
-    font-size: 2.2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.4rem;
     margin-bottom: 60px;
     background: linear-gradient(90deg, #8c52ff, #00ffff);
     -webkit-background-clip: text;
@@ -97,77 +138,92 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    max-width: 900px;
-    margin: auto;
     gap: 50px;
   }
 
   .team-card {
     width: 230px;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255,255,255,0.1);
+    padding: 25px;
+    background: rgba(255,255,255,0.08);
     border-radius: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0,255,255,0.15);
     text-align: center;
     opacity: 0;
     transform: translateY(40px);
     transition: all 0.8s ease;
   }
+
   .team-card.visible {
     opacity: 1;
     transform: translateY(0);
   }
+
   .team-card img {
     width: 90px;
     height: 90px;
     border-radius: 50%;
-    border: 2px solid #8c52ff;
+    border: 2px solid #00ffff;
     margin-bottom: 15px;
   }
-  .team-card h3 { font-size: 1.1rem; margin-bottom: 6px; color: #fff; }
-  .team-card p.role { font-size: 0.9rem; color: #8c52ff; margin-bottom: 4px; }
-  .team-card p.handle { font-size: 0.8rem; color: #aaa; }
+
+  .team-card h3 { font-size: 1.2rem; margin-bottom: 5px; }
+  .team-card p.role { font-size: 0.9rem; color: #00ffff; margin-bottom: 3px; }
+  .team-card p.handle { font-size: 0.85rem; color: #ccc; }
 
   footer {
-    margin-top: 80px;
-    padding: 40px;
     text-align: center;
-    background: rgba(0, 0, 0, 0.6);
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
     border-top: 1px solid rgba(255,255,255,0.1);
   }
 
   footer a {
-    margin: 0 15px;
     color: #00ffff;
+    margin: 0 15px;
     text-decoration: none;
     font-weight: 500;
   }
 
-  footer a:hover {
-    text-decoration: underline;
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .qa-buttons-left, .qa-buttons-right {
+      position: static;
+      transform: none;
+      align-items: center;
+      margin-top: 20px;
+    }
+    .qa-section {
+      flex-direction: column;
+      gap: 40px;
+      text-align: center;
+    }
+    .qa-answer { max-width: 90%; font-size: 1.1rem; }
   }
 </style>
 </head>
-<body>
 
+<body>
 <header>
   <h1>Nemesis</h1>
-  <p>Powering a Fair and Decentralized Future for On-Chain Trading</p>
 </header>
 
 <section class="qa-section">
-  <div id="qaAnswer" class="qa-answer">Click a question to learn about Nemesis.</div>
+  <div class="center-text" id="centerText">Select Your Question</div>
+  <div id="qaAnswer" class="qa-answer"></div>
 
-  <div class="qa-buttons">
-    <button class="qa-button" data-answer="Nemesis is a DeFi trading protocol built for Ethereum and EVM-compatible chains. It allows users to long or short any on-chain token via its liquidity framework without relying on derivatives, offering embedded leverage up to ~5×, fully on-chain trading, market making, and liquidations.">What is Nemesis?</button>
+  <div class="qa-buttons-left">
+    <button class="qa-button" data-answer="Nemesis is a DeFi trading protocol built for Ethereum and EVM-compatible chains that allows users to long or short any on-chain token through its liquidity framework, without derivatives. It offers embedded leverage, full on-chain trading, and liquidations.">What is Nemesis?</button>
+    <button class="qa-button" data-answer="Nemesis Arena Tickets are a limited NFT collection within the Nemesis ecosystem, granting holders special allocation or access privileges such as participation in the upcoming $NEMESIS token sale.">What are Nemesis Arena Tickets?</button>
+  </div>
 
-    <button class="qa-button" data-answer="Nemesis Arena Tickets are a limited NFT collection tied to the Nemesis ecosystem. Holders gain exclusive access or allocation rights—like participation in the upcoming $NEMESIS public token sale.">What are Nemesis Arena Tickets?</button>
-
-    <button class="qa-button" data-answer="$NEMESIS is the utility and governance token of the Nemesis protocol. Its public sale is planned with allocation reserved for Arena Ticket holders and a capped funding round.">What is $NEMESIS and its public sale?</button>
+  <div class="qa-buttons-right">
+    <button class="qa-button" data-answer="$NEMESIS is the native utility and governance token of the Nemesis protocol. The public sale will reserve allocation for Arena Ticket holders and operate with a capped funding round.">What is $NEMESIS and its public sale?</button>
   </div>
 </section>
 
-<section class="team-section" id="team">
+<section class="team-section">
   <h2>Meet Our Team</h2>
   <div class="team-container">
     <div class="team-card">
@@ -176,7 +232,6 @@
       <p class="role">Official Account</p>
       <p class="handle">@Nemesisdottrade</p>
     </div>
-
     <div class="team-card">
       <img src="https://pbs.twimg.com/profile_images/1890001272315158528/HG6x0Z9N_400x400.jpg" alt="Builder">
       <h3>Peter</h3>
@@ -187,19 +242,20 @@
 </section>
 
 <footer>
-  <p>
-    <a href="https://nemesis.trade" target="_blank">Website</a> |
-    <a href="https://twitter.com/Nemesisdottrade" target="_blank">X (Twitter)</a> |
-    <a href="https://substack.com/inbox/post/172884109?r=6ful6d&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true&triedRedirect=true" target="_blank">Substack</a>
-  </p>
+  <a href="https://nemesis.trade" target="_blank">Website</a> |
+  <a href="https://twitter.com/Nemesisdottrade" target="_blank">X (Twitter)</a> |
+  <a href="https://substack.com/inbox/post/172884109?r=6ful6d&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true&triedRedirect=true" target="_blank">Substack</a>
 </footer>
 
 <script>
-  // Q&A logic
+  // Handle Q&A logic
   const buttons = document.querySelectorAll('.qa-button');
   const answerBox = document.getElementById('qaAnswer');
+  const centerText = document.getElementById('centerText');
+
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
+      centerText.style.opacity = '0';
       answerBox.classList.remove('active');
       setTimeout(() => {
         answerBox.textContent = btn.getAttribute('data-answer');
@@ -208,7 +264,7 @@
     });
   });
 
-  // Team fade-in on scroll
+  // Team fade-in animation on scroll
   const teamCards = document.querySelectorAll('.team-card');
   function revealTeam() {
     const trigger = window.innerHeight * 0.85;
@@ -220,6 +276,5 @@
   window.addEventListener('scroll', revealTeam);
   revealTeam();
 </script>
-
 </body>
 </html>
