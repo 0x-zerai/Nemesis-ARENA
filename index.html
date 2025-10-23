@@ -1,303 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nemesis — DeFi Trading Protocol</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg-1: #05060a;
-      --bg-2: #0e0b16;
-      --accent: #00f0ff;
-      --accent-2: #8a3fff;
-      --muted: #9aa3b2;
-      --glass: rgba(255,255,255,0.04);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial,sans-serif;color:#e6eef8;background:linear-gradient(180deg,var(--bg-1) 0%, var(--bg-2) 60%);overflow-x:hidden}
-    .main-container{min-height:300vh;position:relative;z-index:2;padding:16px}
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nemesis | DeFi Trading Protocol</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Poppins", sans-serif; }
+  body {
+    background: radial-gradient(circle at center, #080808, #0b0012 80%);
+    color: #e0e0e0;
+    overflow-x: hidden;
+  }
+  header {
+    text-align: center;
+    padding: 60px 20px 20px;
+  }
+  header h1 {
+    font-size: 3rem;
+    background: linear-gradient(90deg, #8c52ff, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+  }
+  header p {
+    margin-top: 10px;
+    color: #bbb;
+    font-size: 1.1rem;
+  }
 
-    /* top bar */
-    .topbar{position:fixed;left:20px;top:18px;z-index:30;display:flex;align-items:center;gap:14px}
-    .logo{display:flex;align-items:center;gap:12px;cursor:pointer}
-    .logo svg{width:54px;height:54px}
-    .brand{font-weight:800;font-size:1.15rem;color:white}
-    .tag{font-size:0.75rem;color:var(--muted);margin-top:2px}
+  /* Question Section */
+  .qa-section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    /* dark-mode toggle kept for parity */
-    .dark-mode-toggle{position:fixed;right:20px;top:16px;padding:10px 16px;border-radius:18px;background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#031018;border:none;cursor:pointer;z-index:30;font-weight:600}
+  .qa-answer {
+    position: absolute;
+    max-width: 60%;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #e0e0e0;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
 
-    /* title & subtitle */
-    .title{font-family:'Inter';font-size:4.2rem;margin:0;color:transparent;background:linear-gradient(90deg,var(--accent),#b7a0ff);-webkit-background-clip:text;position:fixed;left:50%;transform:translateX(-50%);top:18vh;z-index:20}
-    .subtitle-container{position:fixed;left:50%;top:33vh;transform:translateX(-50%);z-index:20;padding:16px 26px;border-radius:16px;background:rgba(255,255,255,0.03);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.04)}
-    .subtitle{font-size:1.05rem;color:#dff6fb;border:none;background:transparent;font-weight:600;cursor:pointer}
+  .qa-answer.active {
+    opacity: 1;
+  }
 
-    /* canvas sits behind everything */
-    canvas{position:fixed;inset:0;z-index:0}
+  .qa-buttons {
+    position: absolute;
+    right: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
 
-    /* animated images (roles) */
-    .image-layer{position:fixed;inset:0;pointer-events:none;z-index:10}
-    .animated-image{position:absolute;width:120px;height:120px;object-fit:contain;pointer-events:auto;opacity:0;transform-origin:center;transition:transform .25s ease,opacity .35s ease,filter .25s}
-    .animated-image.visible{opacity:1}
-    .animated-image.selected{transform:scale(1.2) rotate(-4deg);filter:drop-shadow(0 10px 30px rgba(0,240,255,0.18))}
+  .qa-button {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 14px 20px;
+    border-radius: 30px;
+    color: #e0e0e0;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .qa-button:hover {
+    background: linear-gradient(90deg, #8c52ff, #00ffff);
+    color: #111;
+  }
 
-    /* questions & team same layout retained */
-    .questions-section{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;max-width:1400px;display:flex;justify-content:space-between;padding:30px;gap:36px;z-index:100;pointer-events:none;opacity:0;transition:opacity .4s}
-    .questions-section.visible{opacity:1;pointer-events:auto}
-    .questions-left,.questions-right{display:flex;flex-direction:column;gap:22px;width:220px}
-    .question-btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:12px 18px;border-radius:999px;color:#d9f9ff;font-weight:600;cursor:pointer;backdrop-filter:blur(6px);pointer-events:auto}
-    .question-btn.selected{transform:scale(1.05);box-shadow:0 8px 30px rgba(138,63,255,0.15)}
+  /* Team Section */
+  .team-section {
+    padding: 100px 0;
+    text-align: center;
+  }
 
-    .team-section{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:100%;max-width:1400px;display:flex;justify-content:space-between;padding:30px;gap:36px;z-index:5;pointer-events:none;opacity:0;transition:opacity .4s}
-    .team-section.visible{opacity:1;pointer-events:auto}
-    .team-member{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);padding:12px;border-radius:14px;text-align:center;color:#dff6fb}
-    .team-member-photo{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid rgba(0,240,255,0.08);cursor:pointer}
+  .team-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 60px;
+    background: linear-gradient(90deg, #8c52ff, #00ffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 
-    /* scroll indicator */
-    .scroll-indicator{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);color:var(--muted);font-weight:600;z-index:20}
+  .team-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: auto;
+    gap: 50px 80px;
+  }
 
-    /* FAQ modal */
-    .faq-button{position:fixed;right:20px;bottom:20px;background:linear-gradient(90deg,var(--accent-2),var(--accent));padding:12px 16px;border-radius:12px;border:none;color:#031018;font-weight:700;cursor:pointer;z-index:40}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;z-index:60}
-    .modal-backdrop.show{display:flex}
-    .modal{width:92%;max-width:880px;background:linear-gradient(180deg,#071226, #0b0f1a);padding:20px;border-radius:12px;border:1px solid rgba(138,63,255,0.12);box-shadow:0 10px 60px rgba(0,0,0,0.6)}
-    .modal h2{margin:0 0 10px;color:var(--accent)}
-    .faq-item{padding:12px;border-radius:10px;margin-bottom:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.02)}
-    .faq-item summary{cursor:pointer;font-weight:700;color:#e8fbff}
-    .faq-item p{margin:8px 0 0;color:var(--muted);line-height:1.45}
+  .team-card {
+    width: 230px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+  }
+  .team-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .team-card img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #8c52ff;
+    margin-bottom: 15px;
+  }
+  .team-card h3 { font-size: 1.1rem; margin-bottom: 6px; color: #fff; }
+  .team-card p.role { font-size: 0.9rem; color: #8c52ff; margin-bottom: 4px; }
+  .team-card p.handle { font-size: 0.8rem; color: #aaa; }
 
-    /* small screens */
-    @media(max-width:768px){
-      .title{font-size:2rem;top:10vh}
-      .subtitle-container{top:25vh}
-      .questions-left,.questions-right{width:100%;align-items:center}
-      .questions-section{flex-direction:column;padding:12px}
-      .team-section{flex-direction:column;padding:12px}
-      .logo svg{width:44px;height:44px}
-    }
+  footer {
+    margin-top: 80px;
+    padding: 40px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
 
-  </style>
+  footer a {
+    margin: 0 15px;
+    color: #00ffff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+</style>
 </head>
 <body>
-  <canvas id="bgCanvas"></canvas>
 
-  <div class="topbar">
-    <div class="logo" id="logoBtn" title="Nemesis Home">
-      <!-- Placeholder N logo SVG; replace later with your own asset by changing <svg> or the image src -->
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0" stop-color="#00f0ff" />
-            <stop offset="1" stop-color="#8a3fff" />
-          </linearGradient>
-        </defs>
-        <rect width="100" height="100" rx="18" fill="#06101a" />
-        <path d="M22 78 L22 22 L44 22 L78 66 L78 78 Z" fill="url(#g)" />
-        <path d="M44 22 L44 44 L66 44" stroke="#06101a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-      </svg>
-      <div>
-        <div class="brand">Nemesis</div>
-        <div class="tag">DeFi Trading Protocol</div>
-      </div>
+<header>
+  <h1>Nemesis</h1>
+  <p>Powering a Fair and Decentralized Future for On-Chain Trading</p>
+</header>
+
+<section class="qa-section">
+  <div id="qaAnswer" class="qa-answer">Click a question to learn about Nemesis.</div>
+
+  <div class="qa-buttons">
+    <button class="qa-button" data-answer="Nemesis is a DeFi trading protocol built for Ethereum and EVM-compatible chains. It allows users to long or short any on-chain token via its liquidity framework without relying on derivatives, offering embedded leverage up to ~5×, fully on-chain trading, market making, and liquidations.">What is Nemesis?</button>
+
+    <button class="qa-button" data-answer="Nemesis Arena Tickets are a limited NFT collection tied to the Nemesis ecosystem. Holders gain exclusive access or allocation rights—like participation in the upcoming $NEMESIS public token sale.">What are Nemesis Arena Tickets?</button>
+
+    <button class="qa-button" data-answer="$NEMESIS is the utility and governance token of the Nemesis protocol. Its public sale is planned with allocation reserved for Arena Ticket holders and a capped funding round.">What is $NEMESIS and its public sale?</button>
+  </div>
+</section>
+
+<section class="team-section" id="team">
+  <h2>Meet Our Team</h2>
+  <div class="team-container">
+    <div class="team-card">
+      <img src="https://via.placeholder.com/80" alt="Team member">
+      <h3>Nemesis Protocol</h3>
+      <p class="role">Official Account</p>
+      <p class="handle">@NemesisTrade</p>
+    </div>
+    <div class="team-card">
+      <img src="https://via.placeholder.com/80" alt="Team member">
+      <h3>Jane Doe</h3>
+      <p class="role">Ecosystem Product Lead</p>
+      <p class="handle">@JaneDoe</p>
+    </div>
+    <div class="team-card">
+      <img src="https://via.placeholder.com/80" alt="Team member">
+      <h3>John Smith</h3>
+      <p class="role">CTO & Co-Founder</p>
+      <p class="handle">@JohnSmith</p>
+    </div>
+    <div class="team-card">
+      <img src="https://via.placeholder.com/80" alt="Team member">
+      <h3>Alice Builder</h3>
+      <p class="role">Head of Protocol</p>
+      <p class="handle">@AliceBuilder</p>
     </div>
   </div>
+</section>
 
-  <button class="dark-mode-toggle" id="darkModeToggle">Toggle Theme</button>
+<footer>
+  <p>
+    <a href="https://nemesis.trade" target="_blank">Website</a> |
+    <a href="https://twitter.com/NemesisTrade" target="_blank">X (Twitter)</a> |
+    <a href="https://substack.com/inbox/post/172884109?r=6ful6d&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true&triedRedirect=true" target="_blank">Substack</a>
+  </p>
+  <p style="color:#777; margin-top:10px;">© 2025 Nemesis. All Rights Reserved.</p>
+</footer>
 
-  <h1 class="title">Nemesis</h1>
-  <div class="subtitle-container">
-    <button class="subtitle" id="subtitle">Trade On-Chain • Long & Short • Up to 5×</button>
-  </div>
-
-  <!-- role images layer -->
-  <div class="image-layer" id="imageContainer" aria-hidden="true"></div>
-
-  <!-- Questions -->
-  <div class="questions-section" id="questionsSection">
-    <div class="questions-left">
-      <button class="question-btn" data-answer="Nemesis is a DeFi trading protocol built for Ethereum and EVM-compatible chains that enables users to buy (go long) or short any on-chain token via its liquidity framework, without relying on derivatives. It offers embedded leverage of up to ~5×, fully on-chain trading, market making, and liquidations.">What is Nemesis?</button>
-      <button class="question-btn" data-answer="Nemesis Arena Tickets are an NFT collection (limited edition) tied to the Nemesis ecosystem, granting holders exclusive access or allocation rights—such as participation in the upcoming $NEMESIS public token sale.">What are Nemesis Arena Tickets?</button>
-      <button class="question-btn" data-answer="$NEMESIS is the utility/governance token of the Nemesis protocol. The public sale is planned with allocation reserved for certain ticket-holders (e.g., those holding Arena Tickets) and a capped funding round.">$NEMESIS & public sale</button>
-    </div>
-    <div class="questions-right">
-      <button class="question-btn" data-answer="Website: https://nemesis.trade">Official Site</button>
-      <button class="question-btn" data-answer="Twitter/X: https://twitter.com/NemesisTrade">X (formerly Twitter)</button>
-      <button class="question-btn" data-answer="Substack: https://substack.com/inbox/post/172884109?r=6ful6d">Substack</button>
-    </div>
-  </div>
-
-  <!-- Team -->
-  <div class="team-section" id="teamSection">
-    <div class="team-left">
-      <div class="team-member">
-        <img src="anoma_images/kiteai.jpg" alt="NemesisOfficial" class="team-member-photo" data-description="Nemesis — The on-chain trading protocol." data-xprofile="https://twitter.com/NemesisTrade" />
-        <div class="team-member-name">Nemesis</div>
-        <div class="team-member-role">Official Account</div>
-        <div class="team-member-x" onclick="window.open('https://twitter.com/NemesisTrade','_blank')">@NemesisTrade</div>
-      </div>
-      <!-- placeholder members; replace with real faces later -->
-      <div class="team-member">
-        <img src="anoma_images/Henryleemr.jpg" alt="Member" class="team-member-photo" data-description="Ecosystem / Product" data-xprofile="https://twitter.com/Henryleemr" />
-        <div class="team-member-name">Ecosystem Lead</div>
-        <div class="team-member-role">Product</div>
-        <div class="team-member-x" onclick="window.open('https://twitter.com/Henryleemr','_blank')">@Henryleemr</div>
-      </div>
-      <div class="team-member">
-        <img src="anoma_images/ChiZhangData.jpg" alt="CEO" class="team-member-photo" data-description="Co-founder & CEO" data-xprofile="https://twitter.com/ChiZhangData" />
-        <div class="team-member-name">Co-founder</div>
-        <div class="team-member-role">CEO</div>
-        <div class="team-member-x" onclick="window.open('https://twitter.com/ChiZhangData','_blank')">@ChiZhangData</div>
-      </div>
-    </div>
-    <div class="team-right">
-      <div class="team-member">
-        <img src="anoma_images/Cindyshi0907.jpg" alt="CMO" class="team-member-photo" data-description="CMO" data-xprofile="https://twitter.com/Cindyshi0907" />
-        <div class="team-member-name">CMO</div>
-        <div class="team-member-role">Marketing</div>
-        <div class="team-member-x" onclick="window.open('https://twitter.com/Cindyshi0907','_blank')">@Cindyshi0907</div>
-      </div>
-      <div class="team-member">
-        <img src="anoma_images/scottshics.jpg" alt="CTO" class="team-member-photo" data-description="CTO & Cofounder" data-xprofile="https://twitter.com/scottshics" />
-        <div class="team-member-name">CTO</div>
-        <div class="team-member-role">Engineering</div>
-        <div class="team-member-x" onclick="window.open('https://twitter.com/scottshics','_blank')">@scottshics</div>
-      </div>
-      <div class="team-member">
-        <img src="anoma_images/vikthebuilder.jpg" alt="Head of Protocol" class="team-member-photo" data-description="Head of Protocol" data-xprofile="https://twitter.com/buidloor" />
-        <div class="team-member-name">Head of Protocol</div>
-        <div class="team-member-role">Protocol</div>
-        <div class="team-member-x" onclick="window.open('https://twitter.com/buidloor','_blank')">@buidloor</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="scroll-indicator" id="scrollIndicator">↓ Scroll ↓</div>
-
-  <button class="faq-button" id="openFaqBtn">FAQ</button>
-
-  <!-- modal -->
-  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
-    <div class="modal" role="document">
-      <h2>Frequently Asked — Nemesis</h2>
-      <div class="faq-list">
-        <details class="faq-item" open>
-          <summary>What is Nemesis?</summary>
-          <p>Nemesis is a DeFi trading protocol built for Ethereum and EVM-compatible chains that enables users to buy (go long) or short any on-chain token via its liquidity framework, without relying on derivatives. It offers embedded leverage of up to ~5×, fully on-chain trading, market making, and liquidations.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What are Nemesis Arena Tickets?</summary>
-          <p>Nemesis Arena Tickets are an NFT collection (limited edition) tied to the Nemesis ecosystem, granting holders exclusive access or allocation rights—such as participation in the upcoming $NEMESIS public token sale.</p>
-        </details>
-        <details class="faq-item">
-          <summary>What is $NEMESIS and its public sale?</summary>
-          <p>$NEMESIS is the utility/governance token of the Nemesis protocol. The public sale is planned with allocation reserved for certain ticket-holders (e.g., those holding Arena Tickets) and a capped funding round.</p>
-        </details>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-        <a href="https://nemesis.trade" target="_blank" rel="noreferrer" style="text-decoration:none"><button style="padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--accent)">Visit site</button></a>
-        <button id="closeFaqBtn" style="padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:#021218">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    /* Canvas background with stars + drifting shapes (kept simple but beautiful) */
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    function resize(){canvas.width=innerWidth;canvas.height=innerHeight}
-    window.addEventListener('resize',resize);resize();
-
-    const stars = Array.from({length:180},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*1.6+0.4,a:Math.random()*0.9+0.1,da:Math.random()*0.02+0.005}));
-
-    function draw(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      // soft radial vignette
-      const g = ctx.createLinearGradient(0,0,0,canvas.height);
-      g.addColorStop(0,'rgba(5,6,10,0.9)');g.addColorStop(1,'rgba(10,8,20,0.95)');
-      ctx.fillStyle = g;ctx.fillRect(0,0,canvas.width,canvas.height);
-
-      // drifting orbs
-      for(let i=0;i<6;i++){
-        const rad = 140 + i*60;const x = (Math.sin(Date.now()/7000*(i+1))*0.5+0.5)*(canvas.width+rad)-rad*0.5;
-        const y = 120 + (i%3)*120 + Math.sin(Date.now()/4000*(i+2))*20;
-        ctx.globalAlpha = 0.06;ctx.fillStyle = 'rgb(138,63,255)';ctx.beginPath();ctx.ellipse(x,y,rad,rad*0.6,0,0,Math.PI*2);ctx.fill();
-      }
-
-      // stars
-      stars.forEach(s=>{s.a+=s.da; if(s.a>1||s.a<0.2) s.da*=-1; ctx.globalAlpha=s.a; ctx.fillStyle='white'; ctx.fillRect(s.x,s.y,s.size,s.size)});
-      ctx.globalAlpha=1;requestAnimationFrame(draw);
-    }
-    draw();
-
-    // image role animation (keeps same behavior as original)
-    const imageConfig = [
-      {path:'images/badge.png',position:'top-left',text:'You Are A Support Warrior'},
-      {path:'images/jacket.png',position:'top-right',text:'You Are A Builder'},
-      {path:'images/dragon.png',position:'bottom-left',text:'You Have Orange In Your Veins'},
-      {path:'images/glasses.png',position:'bottom-right',text:'You Are A Content Creator'}
-    ];
-
-    function getSquarePositions(){
-      const scrollY=window.scrollY||pageYOffset; const sq = Math.min(innerWidth,innerHeight)*0.8; const cx=innerWidth/2; const cy=scrollY+innerHeight/2; const offset=sq/2; return {
-        'top-left':{left:cx-offset+'px',top:cy-offset+'px'},
-        'top-right':{left:cx+offset-150+'px',top:cy-offset+'px'},
-        'bottom-left':{left:cx-offset+'px',top:cy+offset-150+'px'},
-        'bottom-right':{left:cx+offset-150+'px',top:cy+offset-150+'px'}
-      }
-    }
-
-    function animateImages(){
-      const imageContainer = document.getElementById('imageContainer'); imageContainer.innerHTML=''; const positions=getSquarePositions();
-      imageConfig.forEach(cfg=>{
-        const img=document.createElement('img'); img.src=cfg.path; img.className='animated-image visible'; img.style.width='150px'; img.style.height='150px';
-        const pos=positions[cfg.position]; img.style.left=pos.left; img.style.top=pos.top; img.style.pointerEvents='auto';
-        img.addEventListener('click',()=>{document.querySelectorAll('.animated-image').forEach(i=>i.classList.remove('selected')); img.classList.add('selected'); document.getElementById('subtitle').textContent=cfg.text});
-        imageContainer.appendChild(img);
-      });
-      document.getElementById('subtitle').textContent='Choose Your Role';
-    }
-
-    // scroll based visibility logic (kept same ranges)
-    let lastScroll = 0; let imagesDisplayed=false;
-    function handleScroll(){
-      const scrollY = window.scrollY||pageYOffset; const wh = innerHeight; const questions=document.getElementById('questionsSection'); const team=document.getElementById('teamSection'); const subtitle=document.getElementById('subtitle'); const scrollIndicator=document.getElementById('scrollIndicator');
-      const isDown = scrollY>lastScroll; lastScroll=scrollY;
-      if(!isDown && scrollY<wh*1.8) { document.querySelectorAll('.animated-image').forEach(img=>img.classList.remove('visible')); imagesDisplayed=false }
-      if(scrollY>wh*0.3 && scrollY<wh*1.2){ questions.classList.add('visible'); team.classList.remove('visible'); subtitle.textContent='Select Your Question'; scrollIndicator.style.display='none' }
-      else if(scrollY>=wh*1.2 && scrollY<wh*1.8){ questions.classList.remove('visible'); team.classList.add('visible'); subtitle.textContent='Meet Our Team'; scrollIndicator.style.display='none' }
-      else if(scrollY>=wh*1.8){ questions.classList.remove('visible'); team.classList.remove('visible'); subtitle.textContent='Built for On-Chain Trading'; scrollIndicator.style.display='none' }
-      else { questions.classList.remove('visible'); team.classList.remove('visible'); subtitle.textContent='Trade On-Chain • Long & Short • Up to 5×'; scrollIndicator.style.display='block' }
-    }
-    window.addEventListener('scroll',handleScroll); handleScroll();
-
-    // question buttons
-    document.querySelectorAll('.question-btn').forEach(btn=>{
-      btn.addEventListener('click',e=>{ e.preventDefault(); e.stopPropagation(); if(!document.getElementById('questionsSection').classList.contains('visible')) return; document.querySelectorAll('.question-btn').forEach(b=>b.classList.remove('selected')); btn.classList.add('selected'); document.getElementById('subtitle').textContent = btn.getAttribute('data-answer'); });
+<script>
+  // Q&A logic
+  const buttons = document.querySelectorAll('.qa-button');
+  const answerBox = document.getElementById('qaAnswer');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      answerBox.classList.remove('active');
+      setTimeout(() => {
+        answerBox.textContent = btn.getAttribute('data-answer');
+        answerBox.classList.add('active');
+      }, 200);
     });
+  });
 
-    // team hover actions
-    document.querySelectorAll('.team-member-photo').forEach(photo=>{
-      photo.addEventListener('mouseenter',()=>{ if(!document.getElementById('teamSection').classList.contains('visible')) return; document.getElementById('subtitle').textContent = photo.getAttribute('data-description') || 'Team member'; });
-      photo.addEventListener('mouseleave',()=>{ handleScroll(); });
-      photo.addEventListener('click',()=>{ const profile=photo.getAttribute('data-xprofile'); if(profile) window.open(profile,'_blank'); });
+  // Team fade-in on scroll
+  const teamCards = document.querySelectorAll('.team-card');
+  function revealTeam() {
+    const trigger = window.innerHeight * 0.85;
+    teamCards.forEach(card => {
+      const top = card.getBoundingClientRect().top;
+      if (top < trigger) card.classList.add('visible');
     });
+  }
+  window.addEventListener('scroll', revealTeam);
+  revealTeam();
+</script>
 
-    // subtitle click triggers images when scrolled far
-    document.getElementById('subtitle').addEventListener('click',()=>{ const s=window.scrollY||pageYOffset; if(s>=innerHeight*1.8 && !imagesDisplayed){ animateImages(); imagesDisplayed=true } });
-
-    // dark mode toggle - simply toggles tint classes (kept minimal)
-    document.getElementById('darkModeToggle').addEventListener('click',()=>{ document.body.classList.toggle('alt-theme'); });
-
-    // FAQ modal open/close
-    const openFaqBtn = document.getElementById('openFaqBtn'); const modalBackdrop = document.getElementById('modalBackdrop'); const closeFaqBtn = document.getElementById('closeFaqBtn');
-    openFaqBtn.addEventListener('click',()=>{ modalBackdrop.classList.add('show'); document.body.style.overflow='hidden'; });
-    closeFaqBtn.addEventListener('click',()=>{ modalBackdrop.classList.remove('show'); document.body.style.overflow='auto'; });
-    modalBackdrop.addEventListener('click',(e)=>{ if(e.target===modalBackdrop){ modalBackdrop.classList.remove('show'); document.body.style.overflow='auto'; } });
-
-    // logo click returns top
-    document.getElementById('logoBtn').addEventListener('click',()=>{ window.scrollTo({top:0,behavior:'smooth'}); });
-
-  </script>
 </body>
 </html>
