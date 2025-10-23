@@ -7,10 +7,12 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Poppins", sans-serif; }
   body {
-    background: radial-gradient(circle at center, #080808, #0b0012 80%);
+    background: url("https://raw.githubusercontent.com/0x-zerai/Nemesis-ARENA/main/Nemesis_BG.jpg") no-repeat center center fixed;
+    background-size: cover;
     color: #e0e0e0;
     overflow-x: hidden;
   }
+
   header {
     text-align: center;
     padding: 60px 20px 20px;
@@ -43,6 +45,9 @@
     text-align: center;
     font-size: 1.2rem;
     color: #e0e0e0;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 30px;
+    border-radius: 16px;
     opacity: 0;
     transition: opacity 0.5s ease;
   }
@@ -60,7 +65,7 @@
   }
 
   .qa-button {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255,255,255,0.2);
     padding: 14px 20px;
     border-radius: 30px;
@@ -90,17 +95,17 @@
 
   .team-container {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     flex-wrap: wrap;
-    max-width: 1100px;
+    max-width: 900px;
     margin: auto;
-    gap: 50px 80px;
+    gap: 50px;
   }
 
   .team-card {
     width: 230px;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px;
     text-align: center;
@@ -113,8 +118,8 @@
     transform: translateY(0);
   }
   .team-card img {
-    width: 80px;
-    height: 80px;
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
     border: 2px solid #8c52ff;
     margin-bottom: 15px;
@@ -127,7 +132,7 @@
     margin-top: 80px;
     padding: 40px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.6);
     border-top: 1px solid rgba(255,255,255,0.1);
   }
 
@@ -166,28 +171,17 @@
   <h2>Meet Our Team</h2>
   <div class="team-container">
     <div class="team-card">
-      <img src="https://via.placeholder.com/80" alt="Team member">
+      <img src="https://pbs.twimg.com/profile_images/1889997353745033216/YFv5Ku7M_400x400.jpg" alt="Nemesis Official">
       <h3>Nemesis Protocol</h3>
       <p class="role">Official Account</p>
-      <p class="handle">@NemesisTrade</p>
+      <p class="handle">@Nemesisdottrade</p>
     </div>
+
     <div class="team-card">
-      <img src="https://via.placeholder.com/80" alt="Team member">
-      <h3>Jane Doe</h3>
-      <p class="role">Ecosystem Product Lead</p>
-      <p class="handle">@JaneDoe</p>
-    </div>
-    <div class="team-card">
-      <img src="https://via.placeholder.com/80" alt="Team member">
-      <h3>John Smith</h3>
-      <p class="role">CTO & Co-Founder</p>
-      <p class="handle">@JohnSmith</p>
-    </div>
-    <div class="team-card">
-      <img src="https://via.placeholder.com/80" alt="Team member">
-      <h3>Alice Builder</h3>
-      <p class="role">Head of Protocol</p>
-      <p class="handle">@AliceBuilder</p>
+      <img src="https://pbs.twimg.com/profile_images/1890001272315158528/HG6x0Z9N_400x400.jpg" alt="Builder">
+      <h3>Peter</h3>
+      <p class="role">Builder / Core Contributor</p>
+      <p class="handle">@Peter_Nemesis</p>
     </div>
   </div>
 </section>
@@ -195,10 +189,9 @@
 <footer>
   <p>
     <a href="https://nemesis.trade" target="_blank">Website</a> |
-    <a href="https://twitter.com/NemesisTrade" target="_blank">X (Twitter)</a> |
+    <a href="https://twitter.com/Nemesisdottrade" target="_blank">X (Twitter)</a> |
     <a href="https://substack.com/inbox/post/172884109?r=6ful6d&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true&triedRedirect=true" target="_blank">Substack</a>
   </p>
-  <p style="color:#777; margin-top:10px;">© 2025 Nemesis. All Rights Reserved.</p>
 </footer>
 
 <script>
